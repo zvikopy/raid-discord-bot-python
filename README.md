@@ -2,7 +2,7 @@
 este es un script basico para hacer raid a algun grupo de discord es necesario tener permisos de administrador para añadir el bot y ejecutarlo
 
 complementos
-librerías: discord.py, asyncion, figlet
+librerías: discord.py, asyncion, figlet,os
 
 instalación 
 
