@@ -1,9 +1,11 @@
-import time
+#by zvikodev
+import pyfiglet
 import asyncio
 import discord 
 from discord.ext import commands
 #Activa todos los intents
-
+text = pyfiglet.figlet_format("zVikoBot")
+print(text)
 intents = discord.Intents.all()
 #Prefijo del bot
 bot = commands.Bot(command_prefix=".", intents=intents)
